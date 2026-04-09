@@ -84,8 +84,8 @@ function App() {
                   className="text-3xl sm:text-4xl font-black uppercase tracking-tighter text-center leading-none"
                   style={{ 
                     color: selectedGoal.color, 
-                    textShadow: `0 0 15px ${selectedGoal.color}99, 0 0 30px ${selectedGoal.color}44`,
-                    filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))'
+                    textShadow: `0 0 10px rgba(0,0,0,0.8), 0 0 20px ${selectedGoal.color}66`,
+                    filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.6))'
                   }}
                 >
                   {selectedGoal.text}
