@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #ff007f;
+  --color-secondary: #00e5ff;
+  --color-accent: #7000ff;
+  --color-background: #0a0a14;
+  --color-text: #ffffff;
+  --color-text-dim: #a0a0b0;
+  
+  --font-outfit: "Outfit", sans-serif;
+  
+  --animate-spin-slow: spin 5s cubic-bezier(0.1, 0, 0, 1) forwards;
+  --animate-pulse-subtle: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  
+  @keyframes pulse-subtle {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .5; }
+  }
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+
+@layer base {
+  body {
+    @apply bg-background text-text font-outfit min-h-screen overflow-x-hidden;
+    background-image: 
+      radial-gradient(circle at 10% 20%, rgba(112, 0, 255, 0.15) 0%, transparent 40%),
+      radial-gradient(circle at 90% 80%, rgba(0, 229, 255, 0.15) 0%, transparent 40%);
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10 rounded-[20px] p-6 shadow-2xl;
+  }
+
+  .btn {
+    @apply px-6 py-3 rounded-xl font-bold transition-all duration-300 flex items-center gap-2 text-base cursor-pointer;
+  }
+
+  .btn-primary {
+    @apply bg-gradient-to-br from-primary to-accent text-white hover:-translate-y-0.5 hover:shadow-[0_5px_15px_rgba(255,0,127,0.4)];
+  }
+
+  .btn-outline {
+    @apply bg-transparent border border-white/10 text-white hover:bg-white/5 hover:border-secondary;
+  }
+
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    @apply w-1.5;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-white/[0.02] rounded-full;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-white/10 rounded-full hover:bg-secondary;
+  }
+}
+
+/* Custom Animations */
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-in {
+  animation: slideIn 0.5s ease-out forwards;
+}
