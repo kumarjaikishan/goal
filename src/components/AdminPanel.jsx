@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Plus, Trash2, Edit2, Check, X, Settings2 } from 'lucide-react'
 
 const COLORS = [
@@ -14,12 +14,29 @@ const AdminPanel = ({ goals, setGoals, onClose }) => {
   const [password, setPassword] = useState('')
   const [showPassError, setShowPassError] = useState(false)
 
+  // Session duration: 3 hours in milliseconds
+  const SESSION_DURATION = 3 * 60 * 60 * 1000
+
+  useEffect(() => {
+    const session = localStorage.getItem('goal_admin_session')
+    if (session) {
+      const loginTime = parseInt(session, 10)
+      const currentTime = Date.now()
+      if (currentTime - loginTime < SESSION_DURATION) {
+        setIsUnlocked(true)
+      } else {
+        localStorage.removeItem('goal_admin_session')
+      }
+    }
+  }, [])
+
   const handleUnlock = (e) => {
     e.preventDefault()
     if (password === 'developerkishan') {
       setIsUnlocked(true)
       setShowPassError(false)
       setPassword('')
+      localStorage.setItem('goal_admin_session', Date.now().toString())
     } else {
       setShowPassError(true)
       setTimeout(() => setShowPassError(false), 2000)
