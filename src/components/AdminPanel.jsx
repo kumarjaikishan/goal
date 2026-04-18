@@ -8,8 +8,10 @@ const COLORS = [
 
 const AdminPanel = ({ goals, setGoals, onClose }) => {
   const [newGoal, setNewGoal] = useState('')
+  const [newDescription, setNewDescription] = useState('')
   const [editingId, setEditingId] = useState(null)
   const [editText, setEditText] = useState('')
+  const [editDescription, setEditDescription] = useState('')
   const [isUnlocked, setIsUnlocked] = useState(false)
   const [password, setPassword] = useState('')
   const [showPassError, setShowPassError] = useState(false)
@@ -50,11 +52,13 @@ const AdminPanel = ({ goals, setGoals, onClose }) => {
     const newEntry = {
       id: Date.now(),
       text: newGoal,
+      description: newDescription,
       color: COLORS[goals.length % COLORS.length]
     }
     
     setGoals([...goals, newEntry])
     setNewGoal('')
+    setNewDescription('')
   }
 
   const deleteGoal = (id) => {
@@ -64,10 +68,11 @@ const AdminPanel = ({ goals, setGoals, onClose }) => {
   const startEdit = (goal) => {
     setEditingId(goal.id)
     setEditText(goal.text)
+    setEditDescription(goal.description || '')
   }
 
   const saveEdit = () => {
-    setGoals(goals.map(g => g.id === editingId ? { ...g, text: editText } : g))
+    setGoals(goals.map(g => g.id === editingId ? { ...g, text: editText, description: editDescription } : g))
     setEditingId(null)
   }
 
@@ -144,22 +149,28 @@ const AdminPanel = ({ goals, setGoals, onClose }) => {
             {/* Add Section */}
             <div className="bg-white/5 p-5 rounded-3xl border border-white/5">
               <label className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mb-4 block">New Goal Identity</label>
-              <form onSubmit={addGoal} className="flex gap-3">
+              <form onSubmit={addGoal} className="flex flex-col gap-3">
                 <input 
                   type="text" 
                   placeholder="Enter goal name..." 
                   value={newGoal}
                   onChange={(e) => setNewGoal(e.target.value)}
-                  className="flex-1 bg-black/40 border-white/10 rounded-2xl px-5 py-3 text-sm font-bold focus:border-secondary outline-none transition-all placeholder:text-white/10"
+                  className="w-full bg-black/40 border-white/10 rounded-2xl px-5 py-3 text-sm font-bold focus:border-secondary outline-none transition-all placeholder:text-white/10"
                   autoFocus
+                />
+                <textarea 
+                  placeholder="Enter goal description..." 
+                  value={newDescription}
+                  onChange={(e) => setNewDescription(e.target.value)}
+                  className="w-full bg-black/40 border-white/10 rounded-2xl px-5 py-3 text-sm font-medium focus:border-secondary outline-none transition-all placeholder:text-white/10 min-h-[80px] resize-none"
                 />
                 <button 
                   type="submit" 
-                  className="btn btn-primary shadow-xl" 
+                  className="btn btn-primary shadow-xl w-full py-3 rounded-2xl" 
                   disabled={!newGoal.trim()}
-                  style={{ width: '56px', borderRadius: '16px', padding: 0, justifyContent: 'center' }}
                 >
-                  <Plus size={24} />
+                  <Plus size={20} className="mr-2" />
+                  Add Goal
                 </button>
               </form>
             </div>
@@ -184,18 +195,28 @@ const AdminPanel = ({ goals, setGoals, onClose }) => {
                     style={{ backgroundColor: goal.color, boxShadow: `0 0 10px ${goal.color}44` }}
                   ></div>
                   
-                  <div className="flex-1">
+                  <div className="flex-1 min-w-0">
                     {editingId === goal.id ? (
-                      <input 
-                        autoFocus
-                        className="w-full bg-transparent border-b-2 border-primary py-1 text-sm font-bold text-white outline-none"
-                        value={editText}
-                        onChange={(e) => setEditText(e.target.value)}
-                        onBlur={saveEdit}
-                        onKeyDown={(e) => e.key === 'Enter' && saveEdit()}
-                      />
+                      <div className="flex flex-col gap-2">
+                        <input 
+                          autoFocus
+                          className="w-full bg-transparent border-b border-primary py-1 text-sm font-bold text-white outline-none"
+                          value={editText}
+                          onChange={(e) => setEditText(e.target.value)}
+                          onKeyDown={(e) => e.key === 'Enter' && saveEdit()}
+                        />
+                        <textarea 
+                          className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-xs font-medium text-white/70 outline-none focus:border-secondary resize-none"
+                          value={editDescription}
+                          onChange={(e) => setEditDescription(e.target.value)}
+                          rows={2}
+                        />
+                      </div>
                     ) : (
-                      <span className="text-sm font-bold tracking-tight text-white/90">{goal.text}</span>
+                      <div className="flex flex-col">
+                        <span className="text-sm font-bold tracking-tight text-white/90 truncate">{goal.text}</span>
+                        <span className="text-[10px] font-medium text-white/40 line-clamp-1">{goal.description}</span>
+                      </div>
                     )}
                   </div>
 

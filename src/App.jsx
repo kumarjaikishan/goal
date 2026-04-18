@@ -5,18 +5,26 @@ import Footer from './components/Footer'
 import { Settings2 } from 'lucide-react'
 
 const DEFAULT_GOALS = [
-  { id: 1, text: 'Go for a Walk', color: '#ff007f' },
-  { id: 2, text: 'Read a Book', color: '#00e5ff' },
-  { id: 3, text: 'Learn Coding', color: '#7000ff' },
-  { id: 4, text: 'Meditation', color: '#ff8c00' },
-  { id: 5, text: 'Drink Water', color: '#00ff88' },
-  { id: 6, text: 'Call a Friend', color: '#ffef00' }
+  { id: 1, text: 'Go for a Walk', description: 'Fresh air and light exercise to clear your mind.', color: '#ff007f' },
+  { id: 2, text: 'Read a Book', description: 'Dive into another world for at least 20 minutes.', color: '#00e5ff' },
+  { id: 3, text: 'Learn Coding', description: 'Build something new or master a difficult concept.', color: '#7000ff' },
+  { id: 4, text: 'Meditation', description: 'Find your inner peace and focus on your breath.', color: '#ff8c00' },
+  { id: 5, text: 'Drink Water', description: 'Stay hydrated! Your body will thank you.', color: '#00ff88' },
+  { id: 6, text: 'Call a Friend', description: 'Reconnect with someone you care about today.', color: '#ffef00' }
 ]
 
 function App() {
   const [goals, setGoals] = useState(() => {
     const saved = localStorage.getItem('goal_wheel_items')
-    return saved ? JSON.parse(saved) : DEFAULT_GOALS
+    if (saved) {
+      const parsed = JSON.parse(saved)
+      // Migration: Ensure all goals have a description property
+      return parsed.map(goal => ({
+        ...goal,
+        description: goal.description || 'No description provided.'
+      }))
+    }
+    return DEFAULT_GOALS
   })
   const [selectedGoal, setSelectedGoal] = useState(null)
   const [isSpinning, setIsSpinning] = useState(false)
@@ -81,7 +89,7 @@ function App() {
                 </div>
                 
                 <h2 
-                  className="text-3xl sm:text-4xl font-black uppercase tracking-tighter text-center leading-none"
+                  className="text-3xl sm:text-4xl font-black uppercase tracking-tighter text-center leading-none mb-3"
                   style={{ 
                     color: selectedGoal.color, 
                     textShadow: `0 0 10px rgba(0,0,0,0.8), 0 0 20px ${selectedGoal.color}66`,
@@ -90,6 +98,12 @@ function App() {
                 >
                   {selectedGoal.text}
                 </h2>
+                
+                {selectedGoal.description && (
+                  <p className="text-white/60 text-xs sm:text-sm font-medium text-center max-w-[80%] px-4 leading-relaxed animate-in fade-in slide-in-from-bottom-2 duration-700">
+                    {selectedGoal.description}
+                  </p>
+                )}
               </div>
             </div>
           )}
